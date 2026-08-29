@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Del papiro al pixel — Historia de las Tecnologías de la Información</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f3ecdd;
+    --paper-2:#ece2cc;
+    --ink:#1c2541;
+    --ink-soft:#3a4266;
+    --copper:#b5651d;
+    --copper-soft:#d98c3f;
+    --teal:#0f6b66;
+    --teal-soft:#3fa39d;
+    --violet:#5b3e9e;
+    --violet-soft:#8a6fd1;
+    --void:#0b0e14;
+    --void-2:#12172a;
+    --mist:#aab2d1;
+    --line: rgba(28,37,65,0.18);
+    --radius: 18px;
+    --sun:#f2b705;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Source Sans 3', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  .mono{
+    font-family:'JetBrains Mono', monospace;
+  }
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+
+  /* ---------- PROGRESS BAR ---------- */
+  .progressbar{
+    position:fixed; top:0; left:0; right:0; height:4px; z-index:100;
+    background:rgba(28,37,65,0.08);
+  }
+  .progressbar-fill{
+    height:100%; width:0%;
+    background:linear-gradient(90deg, var(--copper), var(--sun));
+    transition:width .08s linear, background .3s;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:82vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:8vh 6vw 10vh;
+    background:var(--paper);
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(28,37,65,0.035) 0 1px, transparent 1px 64px);
+    pointer-events:none;
+  }
+  .blob{
+    position:absolute; border-radius:50%;
+    filter:blur(50px);
+    opacity:0.55;
+    animation:float 14s ease-in-out infinite;
+    pointer-events:none;
+  }
+  .blob-1{ width:280px; height:280px; background:#e0741f; top:-60px; left:-60px; animation-delay:0s;}
+  .blob-2{ width:220px; height:220px; background:#5b3e9e; bottom:-40px; right:-40px; animation-delay:2s;}
+  .blob-3{ width:180px; height:180px; background:#0f9d8a; top:40%; right:8%; animation-delay:4s; opacity:0.35;}
+  .blob-4{ width:150px; height:150px; background:#e91e8c; top:12%; right:22%; animation-delay:6s; opacity:0.3;}
+  @keyframes float{
+    0%,100%{ transform:translateY(0) translateX(0) scale(1); }
+    33%{ transform:translateY(-22px) translateX(14px) scale(1.06); }
+    66%{ transform:translateY(14px) translateX(-10px) scale(0.96); }
+  }
+  .confetti{
+    position:absolute; font-size:1.4rem; opacity:0.8;
+    animation:drift 9s ease-in-out infinite;
+    pointer-events:none; user-select:none;
+  }
+  @keyframes drift{
+    0%,100%{ transform:translateY(0) rotate(0deg); }
+    50%{ transform:translateY(-18px) rotate(12deg); }
+  }
+  .hero-eyebrow{
+    position:relative;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--copper);
+    margin-bottom:1.4rem;
+    background:#fff;
+    border:1px solid var(--line);
+    padding:0.4rem 0.9rem;
+    border-radius:999px;
+    box-shadow:0 2px 0 var(--line);
+  }
+  .hero h1{
+    position:relative;
+    font-size:clamp(2.4rem, 6vw, 4.8rem);
+    line-height:1.02;
+    margin:0 0 1.1rem;
+    max-width:18ch;
+  }
+  .hero h1 em{
+    font-style:italic;
+    font-weight:500;
+    background:linear-gradient(90deg, #e0741f 0%, #e91e8c 33%, #5b3e9e 66%, #0f9d8a 100%);
+    background-size:200% auto;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    animation:hue 8s linear infinite;
+  }
+  @keyframes hue{
+    0%{ background-position:0% center; }
+    100%{ background-position:200% center; }
+  }
+  .hero p{
+    position:relative;
+    max-width:54ch;
+    font-size:1.1rem;
+    color:var(--ink-soft);
+    margin:0 0 1.6rem;
+  }
+  .hero-track{
+    position:relative;
+    display:flex; gap:0.55rem; align-items:center;
+    font-size:1.5rem;
+    margin-bottom:1.8rem;
+  }
+  .hero-track span{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:2.2rem; height:2.2rem; border-radius:50%;
+    background:#fff; border:1px solid var(--line);
+    box-shadow:0 2px 0 var(--line);
+    transition:transform .2s;
+  }
+  .hero-track span:hover{ transform:translateY(-4px) scale(1.1); }
+  .hero-track .arrow{
+    background:none; border:none; box-shadow:none; width:auto; height:auto;
+    color:var(--ink-soft); font-size:1rem;
+  }
+  .hero-thread{
+    position:relative;
+    width:2px;
+    height:56px;
+    background:linear-gradient(180deg, var(--copper), var(--violet));
+    margin-top:0.2rem;
+  }
+  .hero-thread::after{
+    content:"";
+    position:absolute; bottom:-6px; left:50%;
+    transform:translateX(-50%);
+    width:10px; height:10px; border-radius:50%;
+    background:var(--violet);
+    box-shadow:0 0 0 4px rgba(91,62,158,0.18);
+  }
+
+  /* ---------- CHAPTER NAV ---------- */
+  .chapternav{
+    position:sticky; top:4px; z-index:50;
+    display:flex; gap:0.5rem; overflow-x:auto;
+    background:rgba(243,236,221,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:0.5rem 1rem;
+    -ms-overflow-style:none; scrollbar-width:none;
+  }
+  .chapternav::-webkit-scrollbar{display:none;}
+  .chapternav button{
+    flex:0 0 auto;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.02em;
+    background:#fff; cursor:pointer;
+    color:var(--ink-soft);
+    padding:0.5rem 0.9rem;
+    border:1.5px solid var(--line);
+    border-radius:999px;
+    white-space:nowrap;
+    transition:color .2s, border-color .2s, background .2s, transform .15s;
+  }
+  .chapternav button:hover{ color:var(--ink); transform:translateY(-1px); }
+  .chapternav button.active{
+    color:#fff;
+    border-color:var(--dot,var(--copper));
+    background:var(--dot,var(--copper));
+    font-weight:600;
+  }
+
+  /* ---------- CHAPTER SECTIONS ---------- */
+  .chapter{
+    position:relative;
+    padding:5.5rem 6vw 3rem;
+  }
+  .chapter-head{
+    max-width:900px; margin:0 auto 3rem;
+  }
+  .chapter-tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.8rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    display:inline-flex;
+    align-items:center;
+    gap:0.5rem;
+    color:#fff;
+    background:var(--dot, var(--copper));
+    padding:0.3rem 0.8rem 0.3rem 0.6rem;
+    border-radius:999px;
+    margin-bottom:1rem;
+  }
+  .chapter-tag .emoji{ font-size:1.05rem; }
+  .chapter-head h2{
+    font-size:clamp(1.7rem, 3.4vw, 2.6rem);
+    margin:0 0 0.7rem;
+  }
+  .chapter-head p{
+    max-width:62ch;
+    color:var(--ink-soft);
+    font-size:1.04rem;
+    margin:0 0 1rem;
+  }
+  .fact-badge{
+    display:inline-flex;
+    align-items:flex-start;
+    gap:0.5rem;
+    max-width:62ch;
+    background:color-mix(in srgb, var(--dot, var(--copper)) 12%, #fff);
+    border:1.5px dashed var(--dot, var(--copper));
+    border-radius:12px;
+    padding:0.7rem 0.9rem;
+    font-size:0.92rem;
+    color:var(--ink);
+  }
+  .chapter.dark .fact-badge{
+    background:color-mix(in srgb, var(--dot, var(--violet)) 18%, var(--void-2));
+    color:#f0f1fa;
+  }
+  .fact-badge .bulb{ font-size:1.1rem; flex:0 0 auto; }
+  .chapter-banner{
+    max-width:1000px; margin:0 auto 3rem;
+    border-radius:var(--radius);
+    overflow:hidden;
+    border:1px solid var(--line);
+    aspect-ratio: 16/6.2;
+    position:relative;
+    background:var(--paper-2);
+  }
+  .chapter-banner img{
+    width:100%; height:100%; object-fit:cover;
+    filter:saturate(0.92) contrast(1.02);
+  }
+  .chapter-banner .credit{
+    position:absolute; bottom:0; right:0;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.62rem;
+    color:#fff; background:rgba(0,0,0,0.45);
+    padding:0.25rem 0.55rem;
+    border-top-left-radius:6px;
+  }
+
+  /* ---------- SPINE + ENTRIES ---------- */
+  .spine-wrap{
+    max-width:1000px; margin:0 auto;
+    position:relative;
+  }
+  .spine-wrap::before{
+    content:"";
+    position:absolute;
+    left:50%; top:0; bottom:0;
+    width:2px;
+    transform:translateX(-50%);
+    background:var(--dot, var(--copper));
+    opacity:0.35;
+  }
+  .entry{
+    position:relative;
+    width:calc(50% - 2.6rem);
+    margin-bottom:2.6rem;
+  }
+  .entry:nth-child(odd){ margin-right:auto; text-align:right; }
+  .entry:nth-child(even){ margin-left:auto; text-align:left; }
+  .entry-node{
+    position:absolute; top:0.35rem;
+    width:12px; height:12px; border-radius:50%;
+    background:var(--dot, var(--copper));
+    box-shadow:0 0 0 5px var(--paper), 0 0 0 6px var(--line);
+  }
+  .entry:nth-child(odd) .entry-node{ right:-2.9rem; }
+  .entry:nth-child(even) .entry-node{ left:-2.9rem; }
+
+  .card{
+    background:#fffdf8;
+    border:1px solid var(--line);
+    border-left:4px solid var(--dot, var(--copper));
+    border-radius:var(--radius);
+    padding:1.3rem 1.4rem;
+    box-shadow:0 1px 2px rgba(28,37,65,0.04);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 12px 24px -8px color-mix(in srgb, var(--dot, var(--copper)) 45%, transparent);
+  }
+  .entry:nth-child(odd) .card{ border-left:1px solid var(--line); border-right:4px solid var(--dot, var(--copper)); }
+  .card .date{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.76rem;
+    font-weight:600;
+    color:var(--dot, var(--copper));
+    letter-spacing:0.03em;
+    margin-bottom:0.35rem;
+    display:block;
+  }
+  .card h3{
+    font-size:1.16rem;
+    margin:0 0 0.5rem;
+    line-height:1.25;
+  }
+  .card p{
+    font-size:0.93rem;
+    color:var(--ink-soft);
+    line-height:1.58;
+    margin:0;
+  }
+  .card img{
+    width:100%;
+    border-radius:8px;
+    margin-top:0.7rem;
+    border:1px solid var(--line);
+  }
+  .card .imgcredit{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.6rem;
+    color:#9aa0b8;
+    margin-top:0.3rem;
+  }
+
+  /* dark chapters (digital eras) */
+  .chapter.dark{
+    background:var(--void);
+    color:#e7e9f5;
+    border-top:1px solid rgba(255,255,255,0.06);
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .chapter.dark .chapter-head p{ color:var(--mist); }
+  .chapter.dark .spine-wrap::before{ opacity:0.55; }
+  .chapter.dark .card{
+    background:var(--void-2);
+    border-color:rgba(255,255,255,0.08);
+    box-shadow:0 1px 2px rgba(0,0,0,0.3);
+  }
+  .chapter.dark .card p{ color:var(--mist); }
+  .chapter.dark .card h3{ color:#f4f5fb; }
+  .chapter.dark .entry-node{ box-shadow:0 0 0 5px var(--void), 0 0 8px 2px var(--dot, var(--violet)); }
+  .chapter.dark .chapter-banner{ background:var(--void-2); border-color:rgba(255,255,255,0.1); }
+
+  /* icon bullet for entries without photos */
+  .icon{
+    width:38px; height:38px;
+    border-radius:10px;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:var(--dot, var(--copper));
+    margin-bottom:0.7rem;
+    box-shadow:0 3px 0 color-mix(in srgb, var(--dot, var(--copper)) 60%, #000);
+  }
+  .entry:nth-child(odd) .icon{ margin-left:auto; }
+  .icon svg{ width:19px; height:19px; stroke:#fff; fill:none; stroke-width:1.8; }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    background:var(--void);
+    color:var(--mist);
+    padding:3.5rem 6vw 2.4rem;
+    text-align:center;
+    font-size:0.86rem;
+  }
+  footer .foot-title{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:#fff;
+    margin-bottom:0.6rem;
+  }
+  footer a{ color:var(--copper-soft); text-decoration:none; }
+
+  /* ---------- ADMIN ---------- */
+  .admin-fab{
+    position:fixed; bottom:22px; right:22px; z-index:200;
+    width:50px; height:50px; border-radius:50%;
+    background:var(--ink); color:#fff;
+    border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 18px rgba(28,37,65,0.35);
+    transition:transform .15s;
+  }
+  .admin-fab:hover{ transform:scale(1.06); }
+  .admin-fab svg{ width:22px; height:22px; }
+
+  .admin-bar{
+    position:fixed; top:0; left:0; right:0; z-index:201;
+    background:var(--violet);
+    color:#fff;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.78rem;
+    padding:0.6rem 1rem;
+    display:none;
+    align-items:center; justify-content:center; gap:1rem;
+    flex-wrap:wrap;
+  }
+  .admin-bar.show{ display:flex; }
+  .admin-bar button{
+    font-family:'JetBrains Mono', monospace;
+    background:rgba(255,255,255,0.15);
+    color:#fff; border:1px solid rgba(255,255,255,0.4);
+    border-radius:6px; padding:0.3rem 0.7rem; cursor:pointer;
+    font-size:0.74rem;
+  }
+  .admin-bar button:hover{ background:rgba(255,255,255,0.25); }
+
+  body.editing .editable{
+    outline:1.5px dashed var(--violet-soft);
+    outline-offset:2px;
+    border-radius:4px;
+    cursor:text;
+  }
+  body.editing .editable:focus{
+    outline:1.5px solid var(--violet);
+    background:rgba(91,62,158,0.06);
+  }
+  body.editing.has-bar{ padding-top:42px; }
+
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(11,14,20,0.55);
+    display:none; align-items:center; justify-content:center; z-index:300;
+    padding:1rem;
+  }
+  .modal-backdrop.show{ display:flex; }
+  .modal{
+    background:var(--paper); border-radius:12px; padding:1.8rem;
+    max-width:340px; width:100%;
+    box-shadow:0 20px 50px rgba(0,0,0,0.3);
+  }
+  .modal h3{ margin:0 0 0.4rem; font-size:1.1rem; }
+  .modal p{ font-size:0.85rem; color:var(--ink-soft); margin:0 0 1rem; }
+  .modal input{
+    width:100%; padding:0.6rem 0.7rem; border-radius:8px;
+    border:1px solid var(--line); font-family:'Source Sans 3', sans-serif;
+    font-size:0.95rem; margin-bottom:0.9rem;
+  }
+  .modal-actions{ display:flex; gap:0.6rem; justify-content:flex-end; }
+  .modal-actions button{
+    font-family:'Source Sans 3', sans-serif;
+    border:none; border-radius:7px; padding:0.5rem 1rem;
+    font-size:0.85rem; cursor:pointer;
+  }
+  .modal-actions .cancel{ background:var(--paper-2); color:var(--ink); }
+  .modal-actions .confirm{ background:var(--violet); color:#fff; }
+  .modal .error{ color:#b5301d; font-size:0.8rem; margin:-0.5rem 0 0.8rem; display:none; }
+
+  @media (max-width: 760px){
+    .spine-wrap::before{ left:14px; }
+    .entry{ width:calc(100% - 3rem); margin-left:2.8rem !important; margin-right:0 !important; text-align:left !important; }
+    .entry .icon{ margin-left:0 !important; }
+    .entry-node{ left:-2.35rem !important; right:auto !important; }
+    .chapter{ padding:3.6rem 5vw 2.4rem; }
+    .hero{ padding:10vh 6vw; }
+  }
+</style>
+</head>
+<body>
+
+<div class="admin-bar" id="adminBar">
+  <span>✎ MODO EDICIÓN — haz clic en cualquier texto para modificarlo</span>
+  <button id="saveBtn">Guardar cambios</button>
+  <button id="resetBtn">Restablecer original</button>
+  <button id="exitBtn">Salir</button>
+</div>
+
+<div class="progressbar"><div class="progressbar-fill" id="progressFill"></div></div>
+
+<section class="hero">
+  <span class="blob blob-1"></span>
+  <span class="blob blob-2"></span>
+  <span class="blob blob-3"></span>
+  <span class="blob blob-4"></span>
+  <span class="confetti" style="top:18%; left:12%;">✦</span>
+  <span class="confetti" style="top:70%; left:8%; animation-delay:2s;">✎</span>
+  <span class="confetti" style="top:22%; right:10%; animation-delay:3s;">⚡</span>
+  <span class="confetti" style="top:65%; right:14%; animation-delay:1s;">◆</span>
+  <div class="hero-eyebrow">🎓 Un proyecto de investigación</div>
+  <h1>Del papiro <em>al pixel</em></h1>
+  <p>Un recorrido divertido (¡y con datos reales!) por cerca de 5500 años de historia: desde las primeras marcas sobre arcilla hasta la inteligencia artificial que hoy escribe demostraciones matemáticas.</p>
+  <div class="hero-track">
+    <span title="Antigüedad">🏺</span><span class="arrow">→</span>
+    <span title="Edad Media">🖋️</span><span class="arrow">→</span>
+    <span title="Rev. Industrial">⚙️</span><span class="arrow">→</span>
+    <span title="Ondas">📡</span><span class="arrow">→</span>
+    <span title="Cómputo">💻</span><span class="arrow">→</span>
+    <span title="Redes">🌐</span><span class="arrow">→</span>
+    <span title="La Web">🕸️</span><span class="arrow">→</span>
+    <span title="Móvil">📱</span><span class="arrow">→</span>
+    <span title="IA">🤖</span>
+  </div>
+  <div class="hero-thread"></div>
+</section>
+
+<nav class="chapternav" id="chapterNav"></nav>
+
+<main id="timeline"></main>
+
+<footer>
+  <div class="foot-title">Del papiro al pixel</div>
+  <p>Línea de tiempo elaborada como proyecto escolar sobre la Historia de las Tecnologías de la Información, a partir de la investigación colaborativa del grupo en Padlet.</p>
+  <p class="mono" style="margin-top:1rem; opacity:0.6;">Fotografías históricas: Wikimedia Commons (dominio público / CC).</p>
+</footer>
+
+<button class="admin-fab" id="adminFab" title="Acceso de administrador">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+</button>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <h3 id="modalTitle">Acceso de administrador</h3>
+    <p id="modalSub">Introduce la contraseña para activar el modo de edición.</p>
+    <input type="password" id="pwInput" placeholder="Contraseña">
+    <div class="error" id="pwError">Contraseña incorrecta. Inténtalo de nuevo.</div>
+    <div class="modal-actions">
+      <button class="cancel" id="modalCancel">Cancelar</button>
+      <button class="confirm" id="modalConfirm">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   CONFIGURACIÓN DEL ADMINISTRADOR
+   Cambia esta contraseña por la que tú quieras antes de
+   entregar o compartir el archivo.
+   ========================================================= */
+const ADMIN_PASSWORD = "historia2026";
+const STORAGE_KEY = "linea_tiempo_ti_overrides_v1";
+
+/* =========================================================
+   ICONOS (para hitos sin fotografía)
+   ========================================================= */
+const ICONS = {
+  quill: '<path d="M4 20l8-8"/><path d="M14 4c3 0 6 3 6 6-4 0-9 2-11 4L7 12C9 9 12 4 14 4z"/>',
+  disc: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/>',
+  gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>',
+  bolt: '<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/>',
+  wave: '<path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/>',
+  chip: '<rect x="7" y="7" width="10" height="10" rx="1"/><path d="M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4"/>',
+  satellite: '<path d="M4 12l4-4 4 4-4 4z"/><path d="M14 6l4-4 4 4-4 4z"/><path d="M12 12l-6 6"/><path d="M4 20c0-2 1-3 3-3"/>',
+  network: '<circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M5 8v3c0 2 2 3 4 3h6c2 0 4-1 4-3V8"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" />',
+  phone: '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+  wifi: '<path d="M2 8.5c6-5 14-5 20 0"/><path d="M5 12c4-3.3 10-3.3 14 0"/><path d="M8.5 15.5c2-1.5 5-1.5 7 0"/><circle cx="12" cy="19" r="1"/>',
+  usb: '<path d="M12 3v9"/><circle cx="12" cy="4" r="1"/><path d="M12 12l-4 4M12 12l4 4"/><circle cx="8" cy="18" r="2"/><circle cx="16" cy="18" r="2"/>',
+  cloud: '<path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6-1.5A4.5 4.5 0 0 1 17 18H7z"/>',
+  robot: '<rect x="5" y="9" width="14" height="10" rx="2"/><circle cx="9" cy="14" r="1"/><circle cx="15" cy="14" r="1"/><path d="M12 9V5"/><circle cx="12" cy="4" r="1"/>',
+  fiber: '<path d="M3 20c6-10 12-10 18-16"/><circle cx="21" cy="4" r="1.4"/>',
+  molecule: '<circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M8 6h8M7 8l4 8M17 8l-4 8"/>',
+  block: '<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>'
+};
+function iconSvg(name){
+  return `<span class="icon"><svg viewBox="0 0 24 24">${ICONS[name]||ICONS.disc}</svg></span>`;
+}
+
+/* =========================================================
+   DATOS — ERAS Y HITOS
+   ========================================================= */
+const DATA = [
+  {
+    id:"antiguedad",
+    dot:"#c1440e",
+    emoji:"🏺",
+    label:"Antigüedad",
+    title:"Los orígenes del registro",
+    range:"≈3500 a.C. — 105 d.C.",
+    desc:"Antes de cualquier máquina, la humanidad necesitó resolver un problema simple y enorme: cómo hacer que la información sobreviva a la memoria de una sola persona.",
+    fact:"Las tablillas de arcilla eran tan duraderas que hoy, 5000 años después, algunas siguen siendo legibles. ¡Nuestros discos duros no llegarán ni de lejos a esa edad!",
+    banner:{src:"https://commons.wikimedia.org/wiki/Special:FilePath/Dagon%20Museum%2C%20Cuneiform%20document%20on%20clay%20tablet.JPG", alt:"Tablilla de arcilla con escritura cuneiforme", credit:"Wikimedia Commons · CC BY-SA"},
+    dark:false,
+    entries:[
+      {date:"≈ 3500 a.C.", title:"Invención de la escritura en Mesopotamia", icon:"quill",
+       text:"En Sumeria surge la escritura cuneiforme: marcas hechas con un cálamo sobre arcilla fresca. Por primera vez la información puede almacenarse fuera de la memoria humana y transmitirse a otras personas sin necesidad de repetirla en voz alta."},
+      {date:"≈ 3000 a.C.", title:"Tablillas de arcilla", icon:"quill",
+       text:"Consideradas el primer soporte físico masivo de la historia para guardar registros: inventarios, contratos, leyes y cartas. Miles de ellas se conservan hoy en museos, secas o cocidas para durar milenios."},
+      {date:"≈ 2300 a.C.", title:"El ábaco", icon:"gear",
+       text:"Surgido en civilizaciones como la babilónica y la china, es considerado el dispositivo de procesamiento de datos más antiguo del mundo: permitía realizar cálculos matemáticos con rapidez usando cuentas móviles."},
+      {date:"105 d.C.", title:"China inventa el papel", icon:"quill",
+       text:"El alto funcionario Cai Lun, director de los talleres imperiales de Luoyang, perfecciona un proceso para fabricar papel a partir de fibras vegetales. Es un soporte más ligero y barato que la arcilla o el papiro, y su técnica tardaría siglos en llegar a Europa."}
+    ]
+  },
+  {
+    id:"medieval",
+    dot:"#b8860b",
+    emoji:"🖋️",
+    label:"Edad Media",
+    title:"Mensajes y primeras máquinas",
+    range:"1096 — 1671",
+    desc:"Durante siglos la velocidad de la información dependió de cuerpos que se movían: jinetes, palomas y, finalmente, tipos de metal que se podían reordenar una y otra vez.",
+    fact:"Una sola paloma mensajera podía volar hasta 100 km en una hora. Para su época, ¡era la red más rápida que existía!",
+    banner:{src:"https://commons.wikimedia.org/wiki/Special:FilePath/Gutenberg.press.jpg", alt:"Réplica de la prensa de Gutenberg", credit:"Wikimedia Commons"},
+    dark:false,
+    entries:[
+      {date:"1096 – 1291", title:"Palomas mensajeras en las Cruzadas", icon:"wave",
+       text:"Durante el Sitio de Antioquía, en la Primera Cruzada, los caballeros cristianos interceptaron palomas mensajeras enemigas y, al comprobar su eficacia, adoptaron el método. Reyes como Ricardo Corazón de León llegaron a contar con sus propias unidades colombófilas en campaña, y su uso se extendió por Europa occidental hasta el fin de la Edad Media."},
+      {date:"1440", title:"Imprenta de tipos móviles", icon:"quill",
+       text:"Johannes Gutenberg desarrolla en Maguncia un sistema de piezas de metal individuales para cada letra, que se ordenaban para formar palabras, se entintaban y se presionaban sobre el papel con una prensa. Es el invento que hace posible la difusión masiva de textos por primera vez en la historia."},
+      {date:"1671", title:"La máquina multiplicadora de Leibniz", icon:"gear",
+       text:"El filósofo y matemático Gottfried Leibniz desarrolla una máquina mecánica capaz de sumar, restar, multiplicar y dividir automáticamente mediante engranajes, sentando un precedente para el cálculo mecánico."}
+    ]
+  },
+  {
+    id:"industrial",
+    dot:"#d2691e",
+    emoji:"⚙️",
+    label:"Rev. Industrial",
+    title:"Vapor, electricidad y el primer computador teórico",
+    range:"1712 — 1876",
+    desc:"La energía mecánica y luego eléctrica cambia la escala de lo posible. En medio de fábricas y motores, un matemático inglés imagina una máquina que nadie construiría en su tiempo, pero que anticipa la computadora moderna.",
+    fact:"La Máquina Analítica de Babbage nunca se terminó de construir en su época: ¡el Museo de Ciencias de Londres armó una versión funcional recién en 1991, casi 150 años después!",
+    banner:null,
+    dark:false,
+    entries:[
+      {date:"1712", title:"Primera máquina de vapor funcional", icon:"gear",
+       text:"Thomas Newcomen construye la primera máquina de vapor comercial y práctica, con un pistón usado para bombear agua fuera de las minas. Es el motor que impulsará la Revolución Industrial."},
+      {date:"1800", title:"La pila eléctrica", icon:"bolt",
+       text:"Alessandro Volta presenta el primer dispositivo capaz de producir una corriente eléctrica continua y estable, abriendo la puerta a todos los inventos eléctricos que vendrían después: telégrafo, teléfono, radio y, finalmente, la computadora."},
+      {date:"1836 – 1837", title:"El telégrafo eléctrico", icon:"wave",
+       text:"Samuel Morse, junto con su colaborador Alfred Vail, desarrolla el telégrafo eléctrico y el código Morse, capaz de transmitir mensajes de texto a larga distancia mediante pulsos eléctricos. Por primera vez la información viaja más rápido que cualquier jinete o barco."},
+      {date:"1837", title:"La Máquina Analítica de Babbage", icon:"gear",
+       text:"Charles Babbage diseña el primer boceto teórico de lo que hoy reconocemos como una computadora moderna de uso general: incluía una unidad lógica, memoria y el uso de tarjetas perforadas para programarla. Nunca se construyó por completo en vida de su autor, pero su diseño se adelantó más de un siglo."},
+      {date:"1876", title:"El teléfono", icon:"wave",
+       text:"Alexander Graham Bell patenta el teléfono, un dispositivo que permite transmitir la voz humana a distancia mediante señales eléctricas, cambiando para siempre la comunicación personal y comercial."}
+    ]
+  },
+  {
+    id:"ondas",
+    dot:"#1e88e5",
+    emoji:"📡",
+    label:"Ondas",
+    title:"Radio y televisión: la información se vuelve inalámbrica",
+    range:"1895 — 1939",
+    desc:"Sin cables ni papel, la señal empieza a viajar por el aire. En pocas décadas se pasa de transmitir sonido a transmitir imagen en movimiento, y luego, imagen en color.",
+    fact:"El sistema de televisión a color de Guillermo González Camarena usaba un disco giratorio con filtros de colores... ¡y lo patentó a los 23 años!",
+    banner:null,
+    dark:false,
+    entries:[
+      {date:"1895", title:"Primeras transmisiones de radio", icon:"wave",
+       text:"Guglielmo Marconi realiza experimentos que demuestran que es posible transmitir señales de forma inalámbrica a distancia, sentando las bases de la radiodifusión y, más adelante, de toda comunicación sin cables."},
+      {date:"1927", title:"Primeras transmisiones de televisión", icon:"wave",
+       text:"Se logran las primeras transmisiones experimentales de televisión, que permiten enviar imágenes y sonido a distancia, aunque todavía no existían emisiones regulares para el público general."},
+      {date:"1939", title:"Televisión a color", icon:"wave",
+       text:"El ingeniero, científico e inventor mexicano Guillermo González Camarena crea un sistema para transmitir televisión a color, uno de los grandes aportes latinoamericanos a la historia de las tecnologías de la información."}
+    ]
+  },
+  {
+    id:"computo",
+    dot:"#00a676",
+    emoji:"💻",
+    label:"Nace el cómputo",
+    title:"Las primeras computadoras electrónicas",
+    range:"1943 — 1958",
+    desc:"La guerra y la posguerra aceleran una idea que Babbage solo pudo dibujar: máquinas electrónicas capaces de calcular miles de veces más rápido que cualquier persona. En apenas quince años nacen la computadora, la inteligencia artificial y el circuito integrado.",
+    fact:"ENIAC pesaba 27 toneladas y ocupaba un cuarto entero, pero tenía muchísima menos potencia que la calculadora de cualquier celular actual.",
+    banner:{src:"https://commons.wikimedia.org/wiki/Special:FilePath/Classic%20shot%20of%20the%20ENIAC.jpg", alt:"La computadora ENIAC, 1946", credit:"Wikimedia Commons · dominio público (Ejército de EE. UU.)"},
+    dark:false,
+    entries:[
+      {date:"1943 – 1945", title:"Nace la primera computadora electrónica de propósito general", icon:"chip",
+       text:"ENIAC fue diseñada originalmente para calcular tablas de balística militar durante la Segunda Guerra Mundial. Ocupaba una habitación entera, pesaba 27 toneladas y marcó un paso decisivo en el desarrollo de la computación moderna."},
+      {date:"1945", title:"El Memex de Vannevar Bush", icon:"cloud",
+       text:"En su influyente ensayo «As We May Think», el ingeniero Vannevar Bush propone el Memex: un escritorio mecánico imaginario que almacenaría documentos en microfilm y permitiría crear «trazas asociativas», enlaces entre documentos que el usuario pudiera seguir. Nunca se construyó, pero se le considera el precursor conceptual del hipertexto y, por tanto, de la World Wide Web."},
+      {date:"1955", title:"La fibra óptica", icon:"fiber",
+       text:"Narinder Singh Kapany desarrolla la fibra óptica, hoy usada ampliamente en telecomunicaciones porque permite enviar enormes cantidades de datos a gran distancia, a velocidades muy superiores al cable de cobre tradicional."},
+      {date:"1956", title:"Nace la Inteligencia Artificial", icon:"robot",
+       text:"En la Conferencia de Dartmouth se acuña oficialmente el término «inteligencia artificial», y el primer programa considerado una IA, el Logic Theorist, demuestra que una máquina puede razonar sobre problemas lógicos."},
+      {date:"1958", title:"Primer circuito integrado", icon:"chip",
+       text:"El ingeniero Jack Kilby desarrolla una tecnología que permite colocar varios componentes electrónicos en una sola pieza de material semiconductor, el paso que haría posible, décadas más tarde, meter una computadora entera en un chip."}
+    ]
+  },
+  {
+    id:"redes",
+    dot:"#00bfa6",
+    emoji:"🌐",
+    label:"Redes",
+    title:"La era de las redes y el chip personal",
+    range:"1962 — 1972",
+    desc:"Las computadoras dejan de ser islas. Primero un satélite conecta continentes; después, una red militar experimental conecta computadoras entre sí. Al mismo tiempo, un chip diminuto pone el cómputo al alcance de cualquier escritorio.",
+    fact:"ARPANET, el abuelo de Internet, empezó en 1969 conectando apenas 4 computadoras. Hoy Internet conecta miles de millones de dispositivos.",
+    banner:{src:"https://commons.wikimedia.org/wiki/Special:FilePath/Arpanet%20logical%20map%2C%20march%201977.png", alt:"Mapa lógico de ARPANET, marzo de 1977", credit:"Wikimedia Commons · dominio público"},
+    dark:false,
+    entries:[
+      {date:"1962", title:"Telstar: el primer satélite de comunicaciones", icon:"satellite",
+       text:"Lanzado el 10 de julio de 1962, Telstar fue el primer satélite de comunicaciones activo del mundo, capaz de recibir una señal de radio desde tierra y retransmitirla de inmediato. Hizo posibles las primeras transmisiones televisivas transatlánticas, un acontecimiento técnico, político y cultural que impulsó la idea de una información verdaderamente global."},
+      {date:"1969", title:"Nace ARPANET", icon:"network",
+       text:"Se establece ARPANET, una red experimental financiada por el Departamento de Defensa de EE. UU. que conecta computadoras a distancia y permite intercambiar información entre ellas. Es el antecedente directo de Internet."},
+      {date:"1971", title:"Intel lanza el primer microprocesador comercial", icon:"chip",
+       text:"La empresa japonesa Busicom pidió a Intel un conjunto de 12 chips para una nueva línea de calculadoras. El ingeniero Marcian «Ted» Hoff propuso unificar todas esas funciones en un solo circuito integrado, el Intel 4004, diseñado junto con Federico Faggin y Stanley Mazor: el primer microprocesador comercial del mundo, que redujo drásticamente el tamaño de las computadoras."},
+      {date:"1971", title:"Se envía el primer correo electrónico", icon:"mail",
+       text:"Ray Tomlinson, ingeniero de Bolt Beranek and Newman, envía el primer correo electrónico de la historia a través de ARPANET, de un terminal a otro, y populariza el uso del símbolo «@» para separar usuario y máquina."},
+      {date:"1972", title:"Primera consola de videojuegos doméstica", icon:"disc",
+       text:"La Magnavox Odyssey, desarrollada por Ralph H. Baer y su equipo, se convierte en la primera consola de videojuegos pensada para el hogar, abriendo la industria del entretenimiento interactivo."}
+    ]
+  },
+  {
+    id:"web",
+    dot:"#7c4dff",
+    emoji:"🕸️",
+    label:"La Web",
+    title:"La World Wide Web y la conectividad sin cables",
+    range:"1989 — 2001",
+    desc:"Internet ya conectaba computadoras; faltaba una forma sencilla de navegar entre ellas. Un investigador del CERN resuelve ese problema, y en la década siguiente el mundo empieza a desconectar los cables.",
+    fact:"Tim Berners-Lee nunca patentó la Web: la regaló gratis al mundo en 1993, para que cualquier persona pudiera usarla sin pagar licencia.",
+    banner:null,
+    dark:true,
+    entries:[
+      {date:"1989 – 1991", title:"Tim Berners-Lee inventa la World Wide Web", icon:"globe",
+       text:"En el laboratorio CERN, Tim Berners-Lee crea la World Wide Web para facilitar el intercambio de información entre científicos mediante hipertexto. En 1989 presenta la propuesta formal; en 1990 programa el primer navegador y el primer servidor web; en 1991 la tecnología se abre al público general, permitiendo que cualquier persona fuera del CERN pudiera crear y visitar páginas."},
+      {date:"1994", title:"Se crea el Bluetooth", icon:"wifi",
+       text:"Los ingenieros Jaap Haartsen y Sven Mattisson, de la empresa sueca Ericsson, desarrollan el estándar Bluetooth para conectar dispositivos a corta distancia sin cables."},
+      {date:"1999", title:"Nace el estándar Wi-Fi", icon:"wifi",
+       text:"Se lanza el estándar 802.11b, conocido como Wi-Fi, que elimina los cables para conectar computadoras a Internet, con una velocidad máxima de 11 Mbps."},
+      {date:"2000", title:"Memorias USB comerciales", icon:"usb",
+       text:"IBM introduce las primeras memorias USB comerciales, un formato de almacenamiento portátil que desplazaría rápidamente a los disquetes."},
+      {date:"2001", title:"WiMAX", icon:"wave",
+       text:"Se diseña esta tecnología de telecomunicaciones inalámbrica que permite acceso a Internet de banda ancha a largas distancias, hasta 70 km, pensada como alternativa al cable o la fibra en zonas rurales o de baja infraestructura."}
+    ]
+  },
+  {
+    id:"movil",
+    dot:"#e91e8c",
+    emoji:"📱",
+    label:"Era móvil",
+    title:"Smartphones, redes sociales y la nube",
+    range:"2004 — 2019",
+    desc:"La computadora se vuelve de bolsillo y el almacenamiento se muda a servidores lejanos. En quince años cambia por completo la forma en que trabajamos, nos comunicamos y consumimos información.",
+    fact:"El grafeno, aislado en 2004, es unas 200 veces más resistente que el acero... ¡pero tan delgado que una lámina de un átomo de espesor es casi invisible!",
+    banner:null,
+    dark:true,
+    entries:[
+      {date:"2004", title:"Se lanza Facebook y se aísla el grafeno", icon:"network",
+       text:"Mark Zuckerberg, junto con otros estudiantes de Harvard, lanza Facebook, que se convertiría en una de las mayores redes sociales del mundo. Ese mismo año, los científicos Andre Geim y Konstantin Novoselov logran aislar por primera vez el grafeno, un material extraordinariamente resistente y conductor que les valdría el Premio Nobel de Física en 2010."},
+      {date:"2007", title:"El iPhone y el smartphone moderno", icon:"phone",
+       text:"Apple presenta el primer smartphone moderno, popularizando las pantallas multitáctiles y dando inicio oficial a la era de la computación móvil y la conectividad permanente en el bolsillo."},
+      {date:"2009", title:"Windows 7", icon:"chip",
+       text:"Microsoft lanza Windows 7 el 22 de octubre de 2009, un sistema operativo que corrige buena parte de los problemas de rendimiento y las críticas que había recibido su predecesor, Windows Vista."},
+      {date:"2010 – 2015", title:"La nube, los móviles y la IA redefinen el trabajo", icon:"cloud",
+       text:"Los smartphones y tabletas convierten cualquier lugar en una oficina potencial; la computación en la nube permite que varias personas editen un mismo documento en tiempo real desde distintos continentes; y la inteligencia artificial empieza a automatizar tareas repetitivas y a apoyar el análisis de grandes volúmenes de datos."},
+      {date:"2016", title:"Blockchain empresarial", icon:"block",
+       text:"Las empresas comienzan a adoptar cadenas de bloques privadas para registrar transacciones de forma distribuida y verificable, más allá del uso original en criptomonedas."},
+      {date:"2018", title:"Edge Computing", icon:"chip",
+       text:"La computación en el borde acerca el procesamiento de datos al lugar donde se generan —sensores, dispositivos, fábricas— en lugar de enviarlo todo a servidores centrales, reduciendo la latencia."},
+      {date:"2019", title:"Llega la red 5G", icon:"wifi",
+       text:"Las primeras redes 5G se encienden comercialmente en países como Corea del Sur y Estados Unidos en abril de 2019. En México, la red 5G comenzaría a operar comercialmente en febrero de 2022."}
+    ]
+  },
+  {
+    id:"ia",
+    dot:"#536dfe",
+    emoji:"🤖",
+    label:"Presente",
+    title:"La era de la inteligencia artificial",
+    range:"2022 — 2026",
+    desc:"El capítulo más reciente, y todavía en escritura: modelos de lenguaje capaces de conversar, programar y, según los anuncios más recientes, ayudar a producir investigación matemática original.",
+    fact:"Los diez avances matemáticos anunciados por Astra en agosto de 2026 costaron menos de 2000 dólares en cómputo, ¡pero la comunidad científica pide revisarlos antes de darlos por definitivos!",
+    banner:null,
+    dark:true,
+    entries:[
+      {date:"Nov. 2022", title:"La IA generativa se vuelve masiva", icon:"robot",
+       text:"El lanzamiento público de ChatGPT populariza los modelos de lenguaje de gran escala entre el público general, iniciando una carrera acelerada de desarrollo de inteligencia artificial en todo el mundo."},
+      {date:"9 jul. 2026", title:"GPT-5.6 Sol / Terra / Luna", icon:"chip",
+       text:"OpenAI presenta globalmente esta nueva familia de modelos, que se convertiría en referencia de precio y capacidad para la siguiente generación de sistemas de IA."},
+      {date:"1 ago. 2026", title:"La IA empieza a producir nuevos descubrimientos matemáticos", icon:"molecule",
+       text:"OpenAI presenta resultados obtenidos con Astra, una versión interna de su siguiente modelo principal: diez resultados nuevos en matemáticas y ciencias de la computación teórica, sobre problemas que llevaban al menos una década sin avances, en áreas como geometría de altas dimensiones, teoría de grupos, criptografía, computación cuántica y teoría de códigos. La propia comunidad científica pidió cautela: los resultados, aunque verificados formalmente con el sistema Lean, aún deben ser revisados por matemáticos independientes."}
+    ]
+  }
+];
+
+/* =========================================================
+   RENDERIZADO
+   ========================================================= */
+const timelineEl = document.getElementById('timeline');
+const navEl = document.getElementById('chapterNav');
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function renderAll(overrides){
+  timelineEl.innerHTML = '';
+  navEl.innerHTML = '';
+
+  DATA.forEach(era => {
+    // nav chip
+    const navBtn = document.createElement('button');
+    navBtn.textContent = `${era.emoji} ${era.label}`;
+    navBtn.style.setProperty('--dot', era.dot);
+    navBtn.addEventListener('click', () => {
+      document.getElementById('era-'+era.id).scrollIntoView({behavior:'smooth', block:'start'});
+    });
+    navEl.appendChild(navBtn);
+
+    const section = document.createElement('section');
+    section.className = 'chapter' + (era.dark ? ' dark' : '');
+    section.id = 'era-' + era.id;
+    section.style.setProperty('--dot', era.dot);
+
+    const headTitleOverride = overrides[`${era.id}__title`];
+    const headDescOverride = overrides[`${era.id}__desc`];
+
+    let bannerHtml = '';
+    if(era.banner){
+      bannerHtml = `
+        <div class="chapter-banner">
+          <img src="${era.banner.src}" alt="${escapeHtml(era.banner.alt)}" loading="lazy">
+          <span class="credit">${escapeHtml(era.banner.credit)}</span>
+        </div>`;
+    }
+
+    let entriesHtml = '';
+    era.entries.forEach((e, idx) => {
+      const key = `${era.id}__${idx}`;
+      const titleOverride = overrides[key+'__title'];
+      const textOverride = overrides[key+'__text'];
+      entriesHtml += `
+        <div class="entry">
+          <span class="entry-node"></span>
+          <div class="card">
+            ${iconSvg(e.icon)}
+            <span class="date mono">${escapeHtml(e.date)}</span>
+            <h3 class="editable" data-key="${key}__title" contenteditable="false">${titleOverride ?? escapeHtml(e.title)}</h3>
+            <p class="editable" data-key="${key}__text" contenteditable="false">${textOverride ?? escapeHtml(e.text)}</p>
+          </div>
+        </div>`;
+    });
+
+    const factHtml = era.fact ? `
+        <p class="fact-badge"><span class="bulb">💡</span><span><strong>Dato curioso:</strong> ${escapeHtml(era.fact)}</span></p>` : '';
+
+    section.innerHTML = `
+      <div class="chapter-head">
+        <span class="chapter-tag"><span class="emoji">${era.emoji}</span>${escapeHtml(era.label)} · ${escapeHtml(era.range)}</span>
+        <h2 class="editable" data-key="${era.id}__title" contenteditable="false">${headTitleOverride ?? escapeHtml(era.title)}</h2>
+        <p class="editable" data-key="${era.id}__desc" contenteditable="false">${headDescOverride ?? escapeHtml(era.desc)}</p>
+        ${factHtml}
+      </div>
+      ${bannerHtml}
+      <div class="spine-wrap">${entriesHtml}</div>
+    `;
+    timelineEl.appendChild(section);
+  });
+
+  attachEditableBehavior();
+  setupScrollSpy();
+}
+
+function loadOverrides(){
+  try{
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  }catch(e){ return {}; }
+}
+
+/* =========================================================
+   MODO ADMINISTRADOR
+   ========================================================= */
+let editing = false;
+
+const adminFab = document.getElementById('adminFab');
+const modalBackdrop = document.getElementById('modalBackdrop');
+const pwInput = document.getElementById('pwInput');
+const pwError = document.getElementById('pwError');
+const modalConfirm = document.getElementById('modalConfirm');
+const modalCancel = document.getElementById('modalCancel');
+const adminBar = document.getElementById('adminBar');
+const saveBtn = document.getElementById('saveBtn');
+const resetBtn = document.getElementById('resetBtn');
+const exitBtn = document.getElementById('exitBtn');
+
+adminFab.addEventListener('click', () => {
+  pwError.style.display = 'none';
+  pwInput.value = '';
+  modalBackdrop.classList.add('show');
+  setTimeout(() => pwInput.focus(), 50);
+});
+
+modalCancel.addEventListener('click', () => modalBackdrop.classList.remove('show'));
+modalBackdrop.addEventListener('click', (e) => { if(e.target === modalBackdrop) modalBackdrop.classList.remove('show'); });
+
+function tryLogin(){
+  if(pwInput.value === ADMIN_PASSWORD){
+    modalBackdrop.classList.remove('show');
+    enterEditMode();
+  } else {
+    pwError.style.display = 'block';
+  }
+}
+modalConfirm.addEventListener('click', tryLogin);
+pwInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') tryLogin(); });
+
+function enterEditMode(){
+  editing = true;
+  document.body.classList.add('editing', 'has-bar');
+  adminBar.classList.add('show');
+  adminFab.style.display = 'none';
+  document.querySelectorAll('.editable').forEach(el => el.setAttribute('contenteditable', 'true'));
+}
+
+function exitEditMode(){
+  editing = false;
+  document.body.classList.remove('editing', 'has-bar');
+  adminBar.classList.remove('show');
+  adminFab.style.display = 'flex';
+  document.querySelectorAll('.editable').forEach(el => el.setAttribute('contenteditable', 'false'));
+}
+
+exitBtn.addEventListener('click', exitEditMode);
+
+function attachEditableBehavior(){
+  // contenteditable state is re-applied after each render
+  document.querySelectorAll('.editable').forEach(el => el.setAttribute('contenteditable', editing ? 'true' : 'false'));
+}
+
+saveBtn.addEventListener('click', () => {
+  const overrides = loadOverrides();
+  document.querySelectorAll('.editable').forEach(el => {
+    overrides[el.dataset.key] = el.innerHTML;
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
+  saveBtn.textContent = 'Guardado ✓';
+  setTimeout(() => saveBtn.textContent = 'Guardar cambios', 1400);
+});
+
+resetBtn.addEventListener('click', () => {
+  if(confirm('¿Restablecer todos los textos a la versión original? Se perderán los cambios guardados.')){
+    localStorage.removeItem(STORAGE_KEY);
+    renderAll({});
+  }
+});
+
+/* =========================================================
+   SCROLL SPY para la navegación de capítulos
+   ========================================================= */
+function setupScrollSpy(){
+  const sections = Array.from(document.querySelectorAll('.chapter'));
+  const buttons = Array.from(navEl.querySelectorAll('button'));
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const idx = sections.indexOf(entry.target);
+      if(entry.isIntersecting && idx > -1){
+        buttons.forEach(b => b.classList.remove('active'));
+        buttons[idx].classList.add('active');
+      }
+    });
+  }, {rootMargin:'-40% 0px -55% 0px'});
+  sections.forEach(s => observer.observe(s));
+}
+
+/* =========================================================
+   BARRA DE PROGRESO
+   ========================================================= */
+const progressFill = document.getElementById('progressFill');
+function updateProgress(){
+  const h = document.documentElement;
+  const scrolled = h.scrollTop;
+  const max = h.scrollHeight - h.clientHeight;
+  const pct = max > 0 ? (scrolled / max) * 100 : 0;
+  progressFill.style.width = pct + '%';
+
+  // color the bar with the currently active chapter's color
+  const activeBtn = navEl.querySelector('button.active');
+  if(activeBtn){
+    const dot = activeBtn.style.getPropertyValue('--dot');
+    if(dot) progressFill.style.background = `linear-gradient(90deg, ${dot}, var(--sun))`;
+  }
+}
+window.addEventListener('scroll', updateProgress, {passive:true});
+
+/* =========================================================
+   INICIO
+   ========================================================= */
+renderAll(loadOverrides());
+updateProgress();
+</script>
+</body>
+</html>
